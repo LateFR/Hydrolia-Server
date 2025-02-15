@@ -80,7 +80,10 @@ class WorldGeneration():
                 y+=200+sub_relief #on rajoute 200 à y puisqu'on est à 200 de hauteur et on fait en fonction du sous relief
                 
                 if biome=="plain":
-                    world[x,y]=="dirt"
+                    world[x,y]= "dirt"
+            
+        return world
+                        
                     
     
 #tests
