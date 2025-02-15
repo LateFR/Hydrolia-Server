@@ -7,10 +7,10 @@ from fastapi import HTTPException
 app=FastAPI(debug=True)
 app.mount("/",StaticFiles(directory="C:\\Users\\lemax\\Lucas\\Hydrolia",html=True),name="static")
 
-@app.get("/{user_id}/world_generation")
-async def generate_world(user_id: int, seed:int, coor_x: int):
+@app.get("/2001/world_generation/?")
+async def generate_world(user_id: int, seed: int, coor_x: int):
     if user_id!=2001:
-        return HTTPException(status_code=403, detail="user id is bad")
+        raise HTTPException(status_code=403, detail="user id is bad")
     world_generation = WorldGeneration(seed=seed)
     
     relief_map = world_generation.relief(coor_x=coor_x)
