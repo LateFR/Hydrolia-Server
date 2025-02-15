@@ -98,6 +98,9 @@ if __name__=="__main__":
         plt.imshow(cave_map, cmap="gray")
         plt.show()
     
-    world_generation=WorldGeneration(1)
-    print(world_generation.bellow_relief([17]))
-    cave_visualisator(1)
+    world_generation = WorldGeneration(seed=5)
+    
+    relief_map = world_generation.relief(coor_x=0)
+    cave_map = world_generation.cave_map(coor_x=0)
+    
+    print(world_generation.world_generation(relief_map,cave_map))
