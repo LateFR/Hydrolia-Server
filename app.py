@@ -27,7 +27,7 @@ async def generate_world(user_id: int, seed:int, coor_x: int):
     if user_id!=2001:
         raise HTTPException(status_code=403, detail="Your user_id is bad")
     world_generation = WorldGeneration(seed=seed)
-    width=1
+    width=20
     
     relief_map = world_generation.relief(coor_x=coor_x)
     cave_map = world_generation.cave_map(coor_x=coor_x,width=width) #on laisse 100 blocs pour le sol et l'air

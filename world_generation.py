@@ -10,6 +10,10 @@ class WorldGeneration():
         self.seed=seed #ne pas dépasser 500 000 en seed, pour que cave map fonctionne bien
         random.seed=seed #set la seed
         self.global_x=0
+        self.MAX_HEIGHT = 400 #Hauteur du monde
+        
+    def convert_y(self,y): #On convertit y car phaser fonctionne sur des coordonnées canvas html et que 0=le haut du monde. Donc si y=390, alors on le trasforme en y=10 (si max_height=400)
+        return self.MAX_HEIGHT- y
     
     def relief(self,height_max=30,width=200,scale=20,coor_x=0): #height_max=hauteur max    width=largeur du chunk(en blocs)  scale=echelle du bruit (plus c'est grand, plus le terrain est lisse)  coor_x=la coordonnée x du début du chunk
         
@@ -74,16 +78,16 @@ class WorldGeneration():
             
             for y in range(height_cave+sub_relief): #les caves iront de y0 a y200. Elle sont doivent s'arreter à sub relief
                 if caves[x,y] == True: #si jamais y'a pas de caves on ajoute un bloc de stone
-                    world[i] = ["stone",(x,y)]
+                    world[i] = ["stone",(x,self.convert_y(y))] #On adapte la coordonnée y  pour phaser
                 else: #sinon, un bloc d'air
-                    world[i] = ["air",(x,y)]
+                    world[i] = ["air",(x,self.convert_y(y))] #On adapte la coordonnée y  pour phaser
                 i+=1
             
             for y in range(height): #sur les 20 blocs accordés au relief, on met des blocs custom au biome. Le "sous relief" qui définit la frontière entre la partie cave et le sol
                 y+=200+sub_relief #on rajoute 200 à y puisqu'on est à 200 de hauteur et on fait en fonction du sous relief
                 
                 if biome=="plain":
-                    world[i] = ["dirt",(x,y)]
+                    world[i] = ["dirt",(x,self.convert_y(y))] #On adapte la coordonnée y  pour phaser
                 i+=1
             
         return world
