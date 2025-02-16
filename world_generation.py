@@ -60,9 +60,11 @@ class WorldGeneration():
 
         return caves
     
-    def world_generation(self,relief_map,caves,biome_map=None,width=200):
+    def world_generation(self,relief_map,caves,biome_map=None,width=200,height_cave=200):
         world={}
+        i=0
         for x in range(width):
+            i+=1
             #biome = biome_map[x]
             biome="plain"
             
@@ -70,17 +72,19 @@ class WorldGeneration():
             
             sub_relief = self.bellow_relief(relief_map,coor_x=x)
             
-            for y in range(200+sub_relief): #les caves iront de y0 a y200. Elle sont doivent s'arreter à sub relief
+            for y in range(height_cave+sub_relief): #les caves iront de y0 a y200. Elle sont doivent s'arreter à sub relief
                 if caves[x,y] == True: #si jamais y'a pas de caves on ajoute un bloc de stone
-                    world[(x,y)] = "stone"
+                    world[i] = ["stone",(x,y)]
                 else: #sinon, un bloc d'air
-                    world[(x,y)] = "air"
+                    world[i] = ["air",(x,y)]
+                i+=1
             
             for y in range(height): #sur les 20 blocs accordés au relief, on met des blocs custom au biome. Le "sous relief" qui définit la frontière entre la partie cave et le sol
                 y+=200+sub_relief #on rajoute 200 à y puisqu'on est à 200 de hauteur et on fait en fonction du sous relief
                 
                 if biome=="plain":
-                    world[x,y]= "dirt"
+                    world[i] = ["dirt",(x,y)]
+                i+=1
             
         return world
                         
