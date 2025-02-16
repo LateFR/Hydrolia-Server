@@ -22,6 +22,9 @@ app.add_middleware( # pour CORS
 async def serv_html():
     return FileResponse("C:\\Users\\lemax\\Lucas\\Hydrolia\\index.html")
 
+@app.get("/favicon.ico")
+async def serv_icon():
+    return FileResponse("C:\\Users\\lemax\\Lucas\\Hydrolia-Server\\favicon.ico")
 @app.get("/{user_id}/world_generation/")
 async def generate_world(user_id: int, seed:int, coor_x: int):
     if user_id!=2001:
@@ -30,7 +33,7 @@ async def generate_world(user_id: int, seed:int, coor_x: int):
     width=20
     
     relief_map = world_generation.relief(coor_x=coor_x)
-    cave_map = world_generation.cave_map(coor_x=coor_x,width=width) #on laisse 100 blocs pour le sol et l'air
+    cave_map = world_generation.cave_map(coor_x=coor_x,width=width)
     
     bloc_map = world_generation.world_generation(relief_map,cave_map,width=width)
     

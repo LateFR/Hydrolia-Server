@@ -77,7 +77,7 @@ class WorldGeneration():
             sub_relief = self.bellow_relief(relief_map,coor_x=x)
             
             for y in range(height_cave+sub_relief): #les caves iront de y0 a y200. Elle sont doivent s'arreter à sub relief
-                if caves[x,y] == True: #si jamais y'a pas de caves on ajoute un bloc de stone
+                if caves[x,y] == False: #si jamais y'a pas de caves on ajoute un bloc de stone
                     world[i] = ["stone",(x,self.convert_y(y))] #On adapte la coordonnée y  pour phaser
                 else: #sinon, un bloc d'air
                     world[i] = ["air",(x,self.convert_y(y))] #On adapte la coordonnée y  pour phaser
@@ -112,3 +112,4 @@ if __name__=="__main__":
     cave_map = world_generation.cave_map(coor_x=0)
     
     print(world_generation.world_generation(relief_map,cave_map))
+    cave_visualisator(48086)
