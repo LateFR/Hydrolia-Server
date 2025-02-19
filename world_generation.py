@@ -10,12 +10,12 @@ class WorldGeneration():
         self.seed=seed #ne pas dépasser 500 000 en seed, pour que cave map fonctionne bien
         random.seed = seed #set la seed
         self.global_x=0
-        self.MAX_HEIGHT = 300 #Hauteur du monde
+        self.MAX_HEIGHT = 200 #Hauteur du monde
         
     def convert_y(self,y): #On convertit y car phaser fonctionne sur des coordonnées canvas html et que 0=le haut du monde. Donc si y=390, alors on le trasforme en y=10 (si max_height=400)
         return self.MAX_HEIGHT- y
     
-    def relief(self,height_max=20,width=200,scale=100,coor_x=0): #height_max=hauteur max    width=largeur du chunk(en blocs)  scale=echelle du bruit (plus c'est grand, plus le terrain est lisse)  coor_x=la coordonnée x du début du chunk
+    def relief(self,height_max=20,width=200,scale=50,coor_x=0): #height_max=hauteur max    width=largeur du chunk(en blocs)  scale=echelle du bruit (plus c'est grand, plus le terrain est lisse)  coor_x=la coordonnée x du début du chunk
         
         relief_map=[]
         for x in range(coor_x,coor_x+width):
@@ -44,7 +44,7 @@ class WorldGeneration():
         
         
     
-    def cave_map(self, threshold=0.2, width=200, height=100, coor_x=0, scale=40):
+    def cave_map(self, threshold=0.2, width=200, height=85, coor_x=0, scale=40):
         # Calcul d'un décalage en fonction de la seed.
         # Ces coefficients (ici 37 et 73) sont choisis arbitrairement pour "mélanger" la seed.
         height+=50 #On généner toujours en plus, afin de laisser de la marge à world génération
@@ -65,7 +65,7 @@ class WorldGeneration():
 
         return caves
     
-    def world_generation(self,relief_map,caves,coor_x,biome_map=None,width=200,height_cave=100):
+    def world_generation(self,relief_map,caves,coor_x,biome_map=None,width=200,height_cave=85):
         world={}
         i=0
         for x in range(width):

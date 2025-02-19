@@ -34,7 +34,7 @@ async def generate_world(user_id: int, seed:int, coor_x: int):
     
     relief_map = world_generation.relief(coor_x=coor_x,width=width)
     cave_map = world_generation.cave_map(coor_x=coor_x,width=width)
-    
+    print("Caca")
     bloc_map = world_generation.world_generation(relief_map,cave_map,coor_x=coor_x,width=width)
     return bloc_map #retourne bloc map jsonifié
     
