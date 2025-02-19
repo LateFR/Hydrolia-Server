@@ -30,12 +30,11 @@ async def generate_world(user_id: int, seed:int, coor_x: int):
     if user_id!=2001:
         raise HTTPException(status_code=403, detail="Your user_id is bad")
     world_generation = WorldGeneration(seed=seed)
-    width=20
+    width=30
     
-    relief_map = world_generation.relief(coor_x=coor_x)
+    relief_map = world_generation.relief(coor_x=coor_x,width=width)
     cave_map = world_generation.cave_map(coor_x=coor_x,width=width)
     
-    bloc_map = world_generation.world_generation(relief_map,cave_map,width=width)
-    
+    bloc_map = world_generation.world_generation(relief_map,cave_map,coor_x=coor_x,width=width)
     return bloc_map #retourne bloc map jsonifié
     
