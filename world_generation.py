@@ -44,7 +44,7 @@ class WorldGeneration():
         
         
     
-    def cave_map(self, threshold=0.2, width=200, height=85, coor_x=0, scale=40):
+    def cave_map(self, threshold=0.3, width=200, height=85, coor_x=0, scale=40):
         # Calcul d'un décalage en fonction de la seed.
         # Ces coefficients (ici 37 et 73) sont choisis arbitrairement pour "mélanger" la seed.
         height+=50 #On généner toujours en plus, afin de laisser de la marge à world génération
