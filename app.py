@@ -8,7 +8,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.encoders import jsonable_encoder
 
 app=FastAPI(debug=True)
-app.mount("/static",StaticFiles(directory="C:\\Users\\lemax\\Lucas\\Hydrolia"),name="static")
+app.mount("/static",StaticFiles(directory="F:\\Ce PC\\Données(F:)\\Documents\\HYDROLIA\\Hydrolia"),name="static")
 
 app.add_middleware( # pour CORS
     CORSMiddleware,
@@ -20,12 +20,11 @@ app.add_middleware( # pour CORS
 
 @app.get("/")
 async def serv_html():
-    return FileResponse("C:\\Users\\lemax\\Lucas\\Hydrolia\\index.html")
+    return FileResponse("F:\\Ce PC\\Données(F:)\\Documents\\HYDROLIA\\Hydrolia\\index.html")
 
 @app.get("/favicon.ico")
 async def serv_icon():
-    return FileResponse("C:\\Users\\lemax\\Lucas\\Hydrolia-Server\\favicon.ico")
-@app.get("/{user_id}/world_generation/")
+    return FileResponse("F:\\Ce PC\\Données(F:)\\Documents\\Hydrolia-Server\\favicon.ico")
 async def generate_world(user_id: int, seed:int, coor_x: int):
     if user_id!=2001:
         raise HTTPException(status_code=403, detail="Your user_id is bad")
