@@ -113,5 +113,5 @@ if __name__=="__main__":
     relief_map = world_generation.relief(coor_x=0)
     cave_map = world_generation.cave_map(coor_x=0)
     
-    print(world_generation.world_generation(relief_map,cave_map))
+    print(world_generation.world_generation(relief_map,cave_map,coor_x=0))
     cave_visualisator(48086)
