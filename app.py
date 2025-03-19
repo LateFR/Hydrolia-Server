@@ -12,7 +12,7 @@ import os
 is_prod = True
 PATH_PROD = "C:\\Users\\lemax\\Lucas\\Hydrolia\\Hydrolia-Production"
 PATH_DEV = "C:\\Users\\lemax\\Hydrolia\\Hydrolia"
-PATH_BACK = "C:\\Users\\lemax\\Lucas\\Hydrolia-Server"
+PATH_BACK = "C:\\Users\\lemax\\Lucas\\Hydrolia\\Hydrolia-Server"
 
 if is_prod:
     PATH_FRONT = PATH_PROD
@@ -42,10 +42,19 @@ async def redeploy_front_end(secret_key: str):
     SECRET_HASHED = "32a73dd686c90fde4390a1b9e846bead58c4846987af2178ce9eb81cd3eed864b7a29b301c30d8007001b5f72d867e969d8f58d1fb261371e6e0058120888113"
     secret_key_hashed = hashlib.sha512(secret_key.encode()).hexdigest()
     
-    if secret_key_hashed!=SECRET_HASHED or not is_prod:
-        return {"error":"Unauthorized"}
+    print("Redeploy requested")
     
-    os.system(f"cd {PATH_PROD} && git pull")
+    if secret_key_hashed!=SECRET_HASHED or not is_prod:
+        print("Redeploy refused")
+        raise HTTPException(status_code=403, detail="Unauthorized")
+    print("Redploy accepted")
+    print("")
+    print("Deployment: [")
+    os.system(f"cd {PATH_FRONT} && git pull")
+    print("]")
+    
+    print("The server has been redeployed to the production code")
+    
 
 @app.get("/{user_id}/world_generation/")
 async def generate_world(user_id: int, seed:int, coor_x: int):
