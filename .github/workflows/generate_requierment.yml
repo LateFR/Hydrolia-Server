@@ -31,7 +31,8 @@ jobs:
         run: |
           curl -s -X POST http://88.160.36.153:50080/api/generate/requierement \
             -H "Content-Type: application/json" \
-            --data-binary @payload.json > requirements.txt
+            --data-binary @payload.json \
+            --max-time 300 > requirements.txt
           
           cat requirements.txt
 
