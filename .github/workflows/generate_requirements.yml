@@ -2,7 +2,7 @@ name: Update Requirements
 
 on:
   schedule:
-    - cron: "0 0 1 * *"  # ExÃ©cute le 1er jour de chaque mois Ã  minuit UTC
+    - cron: "0 0 1 * *"  # Exécute le 1er jour de chaque mois à minuit UTC
   push:
     branches:
       - main
@@ -22,26 +22,25 @@ jobs:
           find . -name "*.py" | while read -r file; do
             echo "\"$file\": \"$(jq -Rs . < \"$file\")\"," >> payload.json
           done
-          sed -i '$ s/,$//' payload.json  # Supprime la derniÃ¨re virgule
+          sed -i '$ s/,$//' payload.json  # Supprime la dernière virgule
           echo '} }' >> payload.json
           cat payload.json
 
       - name: Send POST request to generate requirements
         id: post_request
         run: |
-          curl -s -X POST http://88.160.36.153:50080/api/generate/requierement \
+          response=$(curl -s -X POST http://88.160.36.153:50080/api/generate/requirement \
             -H "Content-Type: application/json" \
             --data-binary @payload.json \
-            --max-time 300 > requirements.txt
-          
+            --max-time 300)
+
+          echo "$response" | jq -r '.requirements[]' > requirements.txt
           cat requirements.txt
 
       - name: Set up Git authentication
         run: |
           git config --global user.name "github-actions"
           git config --global user.email "github-actions@github.com"
-          git config --global credential.helper store
-          echo "https://${{ secrets.GITHUB_TOKEN }}:@github.com" > ~/.git-credentials
 
       - name: Commit and push changes if needed
         run: |
