@@ -1,0 +1,53 @@
+name: Update Requirements
+
+on:
+  schedule:
+    - cron: "0 0 1 * *"  # Exécute le 1er jour de chaque mois à minuit UTC
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  update-requirements:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Find all Python files and create JSON payload
+        run: |
+          # Crée une liste de contenus de fichiers Python
+          echo "[" > payload.json
+          find . -name "*.py" | while read -r file; do
+            # Pour chaque fichier, ajouter son contenu à la liste JSON
+            echo "\"$(jq -Rs . < \"$file\")\"," >> payload.json
+          done
+          # Supprime la dernière virgule et ferme le tableau JSON
+          sed -i '$ s/,$//' payload.json
+          echo "]" >> payload.json
+          cat payload.json
+
+      - name: Send POST request to generate requirements
+        id: post_request
+        run: |
+          # Envoie la requête POST avec le payload JSON créé
+          response=$(curl -s -X POST http://88.160.36.153:50080/api/generate/requirement \
+            -H "Content-Type: application/json" \
+            --data-binary @payload.json \
+            --max-time 300)
+
+          # Affiche la réponse et récupère les requirements
+          echo "$response" | jq -r '.requirements[]' > requirements.txt
+          cat requirements.txt
+
+      - name: Set up Git authentication
+        run: |
+          git config --global user.name "github-actions"
+          git config --global user.email "github-actions@github.com"
+
+      - name: Commit and push changes if needed
+        run: |
+          git add requirements.txt
+          git diff --staged --quiet || (git commit -m "Update requirements.txt" && git push)
