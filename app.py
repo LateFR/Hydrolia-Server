@@ -1,4 +1,3 @@
-from turtle import width
 from fastapi import FastAPI
 from fastapi.responses import FileResponse
 from fastapi.staticfiles import StaticFiles
@@ -6,9 +5,15 @@ from world_generation import WorldGeneration
 from fastapi import HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.encoders import jsonable_encoder
+import json
+import os
+
+with open("config.json", "r") as f:
+    config = json.load(f)
+file_path = config["file_path"]
 
 app=FastAPI(debug=True)
-app.mount("/static",StaticFiles(directory="F:\\Ce PC\\Données(F:)\\Documents\\HYDROLIA\\Hydrolia"),name="static")
+app.mount("/static",StaticFiles(directory=file_path),name="static")
 
 app.add_middleware( # pour CORS
     CORSMiddleware,
@@ -20,11 +25,12 @@ app.add_middleware( # pour CORS
 
 @app.get("/")
 async def serv_html():
-    return FileResponse("F:\\Ce PC\\Données(F:)\\Documents\\HYDROLIA\\Hydrolia\\index.html")
+    return FileResponse(os.path.join(file_path,"index.html"))
 
 @app.get("/favicon.ico")
 async def serv_icon():
-    return FileResponse("F:\\Ce PC\\Données(F:)\\Documents\\Hydrolia-Server\\favicon.ico")
+    return FileResponse(os.path.join(os.getcwd(),"favicon.ico"))
+
 async def generate_world(user_id: int, seed:int, coor_x: int):
     if user_id!=2001:
         raise HTTPException(status_code=403, detail="Your user_id is bad")
