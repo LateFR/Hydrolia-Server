@@ -26,16 +26,27 @@ jobs:
           echo '} }' >> payload.json
           cat payload.json
 
-      - name: Send POST request to generate requirements
-        id: post_request
-        run: |
-          response=$(curl -s -X POST http://88.160.36.153:50080/api/generate/requirement \
-            -H "Content-Type: application/json" \
-            --data-binary @payload.json \
-            --max-time 300)
+      - - name: Send POST request to generate requirements
+          id: post_request
+          run: |
+            response=$(curl -s -X POST http://88.160.36.153:50080/api/generate/requirement \
+              -H "Content-Type: application/json" \
+              --data-binary @payload.json \
+              --max-time 300)
+            
+            # Affiche la réponse pour déboguer
+            echo "API Response: $response"
+            
+            # Vérifie si la réponse n'est pas vide avant d'utiliser jq
+            if [ -z "$response" ]; then
+              echo "Erreur: La réponse de l'API est vide."
+              exit 1
+            fi
+            
+            # Applique jq si la réponse est valide
+            echo "$response" | jq . > requirements.txt
+            cat requirements.txt
 
-          echo "$response" | jq -r '.requirements[]' > requirements.txt
-          cat requirements.txt
 
       - name: Set up Git authentication
         run: |
