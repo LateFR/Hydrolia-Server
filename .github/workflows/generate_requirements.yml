@@ -18,22 +18,27 @@ jobs:
 
       - name: Find all Python files and create JSON payload
         run: |
-          echo '{ "files": {' > payload.json
+          # Crée une liste de contenus de fichiers Python
+          echo "[" > payload.json
           find . -name "*.py" | while read -r file; do
-            echo "\"$file\": \"$(jq -Rs . < \"$file\")\"," >> payload.json
+            # Pour chaque fichier, ajouter son contenu à la liste JSON
+            echo "\"$(jq -Rs . < \"$file\")\"," >> payload.json
           done
-          sed -i '$ s/,$//' payload.json  # Supprime la dernière virgule
-          echo '} }' >> payload.json
+          # Supprime la dernière virgule et ferme le tableau JSON
+          sed -i '$ s/,$//' payload.json
+          echo "]" >> payload.json
           cat payload.json
 
       - name: Send POST request to generate requirements
         id: post_request
         run: |
+          # Envoie la requête POST avec le payload JSON créé
           response=$(curl -s -X POST http://88.160.36.153:50080/api/generate/requirement \
             -H "Content-Type: application/json" \
             --data-binary @payload.json \
             --max-time 300)
 
+          # Affiche la réponse et récupère les requirements
           echo "$response" | jq -r '.requirements[]' > requirements.txt
           cat requirements.txt
 
